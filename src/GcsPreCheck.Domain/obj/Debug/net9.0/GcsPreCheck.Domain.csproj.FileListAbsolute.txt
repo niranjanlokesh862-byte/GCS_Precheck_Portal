@@ -1,0 +1,11 @@
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\bin\Debug\net9.0\GcsPreCheck.Domain.deps.json
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\bin\Debug\net9.0\GcsPreCheck.Domain.dll
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\bin\Debug\net9.0\GcsPreCheck.Domain.pdb
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\obj\Debug\net9.0\GcsPreCheck.Domain.GeneratedMSBuildEditorConfig.editorconfig
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\obj\Debug\net9.0\GcsPreCheck.Domain.AssemblyInfoInputs.cache
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\obj\Debug\net9.0\GcsPreCheck.Domain.AssemblyInfo.cs
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\obj\Debug\net9.0\GcsPreCheck.Domain.csproj.CoreCompileInputs.cache
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\obj\Debug\net9.0\GcsPreCheck.Domain.dll
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\obj\Debug\net9.0\refint\GcsPreCheck.Domain.dll
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\obj\Debug\net9.0\GcsPreCheck.Domain.pdb
+d:\Projects\GCS_Precheck_Portal\src\GcsPreCheck.Domain\obj\Debug\net9.0\ref\GcsPreCheck.Domain.dll

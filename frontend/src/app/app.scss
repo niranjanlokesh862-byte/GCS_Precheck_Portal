@@ -1,0 +1,97 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  height: 60px;
+  background-color: #0f172a;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 2px solid #2563eb;
+
+  .branding {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .logo {
+      font-size: 1.5rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .version-tag {
+      font-size: 0.75rem;
+      background: #1e293b;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #94a3b8;
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 16px;
+
+    a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: all 0.2s;
+
+      &:hover {
+        color: #ffffff;
+        background: #1e293b;
+      }
+
+      &.active {
+        color: #ffffff;
+        background: #2563eb;
+      }
+    }
+  }
+
+  .user-session {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .user-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .user-dropdown {
+      background: #1e293b;
+      color: #f1f5f9;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+        border-color: #3b82f6;
+      }
+    }
+  }
+}
+
+.app-content {
+  flex: 1;
+  background: #f8fafc;
+}

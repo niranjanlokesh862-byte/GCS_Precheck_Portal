@@ -1,0 +1,91 @@
+<div class="pm-queue-container">
+  <div class="header">
+    <h2>Project Management Approval & Routing Queue</h2>
+    <p>Review customer contract scope and authorize execution for Managed Services and Unknown tickets.</p>
+  </div>
+
+  <div class="alert error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+  <div class="alert success" *ngIf="successMessage()">{{ successMessage() }}</div>
+
+  <div class="queue-grid">
+    <!-- Queue Table -->
+    <div class="table-card">
+      <div class="card-header">
+        <h3>Pending Review ({{ queueItems().length }})</h3>
+        <button class="btn-refresh" (click)="loadQueue()">↻ Refresh</button>
+      </div>
+
+      <table class="queue-table" *ngIf="queueItems().length > 0; else emptyQueue">
+        <thead>
+          <tr>
+            <th>Ticket #</th>
+            <th>Customer Name</th>
+            <th>Classification</th>
+            <th>Screenshots</th>
+            <th>OCR Conf.</th>
+            <th>Uploaded</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of queueItems()" [class.selected]="selectedTicket()?.ticketId === item.ticketId">
+            <td><strong>{{ item.ticketNumber }}</strong></td>
+            <td>{{ item.customerName }}</td>
+            <td>
+              <span class="badge" [ngClass]="item.classification.toLowerCase()">
+                {{ item.classification }}
+              </span>
+            </td>
+            <td>{{ item.screenshotCount }} files</td>
+            <td>
+              <span *ngIf="item.ocrOverallConfidence">
+                {{ (item.ocrOverallConfidence * 100).toFixed(0) }}%
+              </span>
+            </td>
+            <td>{{ item.uploadedAtUtc | date:'short' }}</td>
+            <td>
+              <button class="btn-review" (click)="selectTicket(item)">
+                Review Scope
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #emptyQueue>
+        <div class="empty-state">
+          <p>✓ All customer tickets have been classified and processed. No pending PM approvals.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Review & Decision Panel -->
+    <div class="decision-card" *ngIf="selectedTicket() as current">
+      <h3>PM Decision: #{{ current.ticketNumber }}</h3>
+      <p class="subtitle">Customer: <strong>{{ current.customerName }}</strong></p>
+
+      <div class="decision-form">
+        <label>Assigned Classification:</label>
+        <select [(ngModel)]="decidedClassification">
+          <option value="eLite">eLite (Standard Deployment Scope)</option>
+          <option value="ManagedServices">Managed Services (Custom Tenant Scope)</option>
+        </select>
+
+        <label>Audit & Decision Notes (Mandatory):</label>
+        <textarea
+          [(ngModel)]="notes"
+          rows="4"
+          placeholder="State contract verification reference, maintenance window approval, or rejection justification..."></textarea>
+
+        <div class="action-buttons">
+          <button class="btn-approve" (click)="submitDecision(true)">
+            ✓ Authorize Pre-Check
+          </button>
+          <button class="btn-reject" (click)="submitDecision(false)">
+            ✕ Reject Ticket
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

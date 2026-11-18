@@ -1,0 +1,185 @@
+<div class="dual-pane-container" *ngIf="ticket() as t">
+  <!-- Top Banner & Metadata -->
+  <div class="header-banner">
+    <div class="title-block">
+      <h2>Ticket #{{ t.ticketNumber }} &mdash; {{ t.customerName }}</h2>
+      <div class="badge-row">
+        <span class="badge classification" [ngClass]="t.customerClassification.toLowerCase()">
+          {{ t.customerClassification }}
+        </span>
+        <span class="badge pm-status" [ngClass]="t.pmRoutingStatus.toLowerCase()">
+          PM: {{ t.pmRoutingStatus }}
+        </span>
+        <span class="badge review-status" [ngClass]="t.verificationStatus.toLowerCase()">
+          Review: {{ t.verificationStatus }}
+        </span>
+        <span class="badge confidence" *ngIf="t.ocrOverallConfidence">
+          OCR Confidence: {{ (t.ocrOverallConfidence * 100).toFixed(1) }}%
+        </span>
+      </div>
+    </div>
+
+    <!-- PM Gate Warning if Locked -->
+    <div class="alert-box pm-warning" *ngIf="isPmLocked">
+      <span class="icon">⚠️</span>
+      <div>
+        <strong>Execution Locked by PM Routing Gate:</strong>
+        This ticket requires Project Manager review and contract validation before Studio pre-check can be initiated.
+      </div>
+    </div>
+
+    <div class="alert-box error" *ngIf="errorMessage()">
+      {{ errorMessage() }}
+    </div>
+    <div class="alert-box success" *ngIf="successMessage()">
+      {{ successMessage() }}
+    </div>
+  </div>
+
+  <!-- Dual-Pane Workspace -->
+  <div class="workspace-grid">
+    <!-- LEFT PANE: Original Customer Screenshots -->
+    <div class="pane left-pane">
+      <div class="pane-header">
+        <h3>Original Ticket Evidence ({{ t.attachments.length }})</h3>
+        <div class="attachment-tabs">
+          <button
+            *ngFor="let att of t.attachments; let i = index"
+            class="tab-btn"
+            [class.active]="selectedAttachment()?.id === att.id"
+            (click)="selectAttachment(att)">
+            Screenshot {{ i + 1 }}
+          </button>
+        </div>
+      </div>
+
+      <div class="image-viewer" *ngIf="selectedAttachment() as att">
+        <div class="image-meta">
+          <span>{{ att.originalFileName }}</span>
+          <span class="av-badge clean">✓ Antivirus Clean</span>
+          <span class="hash-tag">SHA-256: {{ att.sha256Checksum.substring(0, 16) }}...</span>
+        </div>
+        <div class="image-canvas">
+          <img [src]="getAttachmentUrl(att.id)" [alt]="att.originalFileName" />
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANE: Extracted Requirements & Verification -->
+    <div class="pane right-pane">
+      <div class="pane-header">
+        <h3>Extracted Requirements & Human-in-the-Loop Verification</h3>
+        <span class="progress-pill">
+          {{ verifiedCount }} of {{ totalCount }} Verified
+        </span>
+      </div>
+
+      <div class="parameters-list">
+        <div
+          class="param-card"
+          *ngFor="let item of t.requirementItems"
+          [ngClass]="item.fieldVerificationStatus.toLowerCase()">
+          
+          <div class="card-header">
+            <div class="param-title">
+              <strong>{{ item.parameterCode }}</strong>
+              <span class="scope-tag" *ngIf="item.scopeQualifier !== 'DEFAULT'">
+                {{ item.scopeQualifier }}
+              </span>
+            </div>
+            
+            <div class="status-tags">
+              <span
+                class="confidence-tag"
+                [class.high]="(item.ocrConfidenceScore || 0) >= 0.90"
+                [class.medium]="(item.ocrConfidenceScore || 0) >= 0.80 && (item.ocrConfidenceScore || 0) < 0.90"
+                [class.low]="(item.ocrConfidenceScore || 0) < 0.80">
+                {{ ((item.ocrConfidenceScore || 0) * 100).toFixed(0) }}% OCR
+              </span>
+              <span class="verification-pill" [ngClass]="item.fieldVerificationStatus.toLowerCase()">
+                {{ item.fieldVerificationStatus }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Normal Display Mode -->
+          <div class="card-body" *ngIf="editingItemId() !== item.id">
+            <div class="field-row">
+              <span class="label">Extracted OCR:</span>
+              <span class="val raw">{{ item.extractedRawText || '— (Not Detected)' }}</span>
+            </div>
+            <div class="field-row">
+              <span class="label">Verified Value:</span>
+              <span class="val verified">{{ item.employeeVerifiedValue || 'Pending Verification' }}</span>
+            </div>
+            <div class="field-row reason" *ngIf="item.correctionReason">
+              <span class="label">Correction Reason:</span>
+              <span class="val">{{ item.correctionReason }}</span>
+            </div>
+            <div class="field-row signer" *ngIf="item.verifiedByUserName">
+              <small>Verified by {{ item.verifiedByUserName }} on {{ item.verifiedAtUtc | date:'short' }}</small>
+            </div>
+
+            <div class="card-actions" *ngIf="t.verificationStatus !== 'RequirementsVerified'">
+              <button
+                class="btn-verify"
+                (click)="saveVerification(item, false)"
+                [disabled]="!item.employeeVerifiedValue">
+                ✓ Confirm
+              </button>
+              <button class="btn-edit" (click)="startEditing(item)">
+                ✎ Modify
+              </button>
+            </div>
+          </div>
+
+          <!-- In-Line Edit Mode -->
+          <div class="card-body edit-mode" *ngIf="editingItemId() === item.id">
+            <label>Corrected Value:</label>
+            <input type="text" [(ngModel)]="editValue" placeholder="Enter verified value" />
+
+            <label>Correction Reason (Mandatory):</label>
+            <input type="text" [(ngModel)]="editReason" placeholder="e.g. OCR typo, updated ticket requirement" />
+
+            <div class="edit-actions">
+              <button
+                class="btn-save"
+                (click)="saveVerification(item, true)"
+                [disabled]="!editValue().trim() || !editReason().trim()">
+                Save Correction
+              </button>
+              <button class="btn-cancel" (click)="cancelEditing()">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completion Footer -->
+      <div class="pane-footer" *ngIf="t.verificationStatus !== 'RequirementsVerified'">
+        <div class="footer-info">
+          <span>Ensure all 10 parameter values match the original ticket image.</span>
+        </div>
+        <button
+          class="btn-complete"
+          [disabled]="!isReviewComplete || isPmLocked"
+          (click)="completeReview()">
+          Complete & Lock Requirements
+        </button>
+      </div>
+
+      <!-- Pre-Check Launch Option When Verified -->
+      <div class="pane-footer verified-ready" *ngIf="t.verificationStatus === 'RequirementsVerified'">
+        <div class="footer-info success">
+          <span>✓ Requirements Locked & Verified. Ready for automated Studio inspection.</span>
+        </div>
+        <button
+          class="btn-launch-precheck"
+          [routerLink]="['/console', t.id]">
+          Open Pre-Check Console →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

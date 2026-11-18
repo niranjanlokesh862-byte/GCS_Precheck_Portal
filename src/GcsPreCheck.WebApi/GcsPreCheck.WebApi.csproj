@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>GcsPreCheck.WebApi</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GcsPreCheck.Domain\GcsPreCheck.Domain.csproj" />
+    <ProjectReference Include="..\GcsPreCheck.Application\GcsPreCheck.Application.csproj" />
+    <ProjectReference Include="..\GcsPreCheck.Infrastructure\GcsPreCheck.Infrastructure.csproj" />
+    <ProjectReference Include="..\GcsPreCheck.Persistence\GcsPreCheck.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
+  </ItemGroup>
+</Project>
