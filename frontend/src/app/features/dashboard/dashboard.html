@@ -1,9 +1,17 @@
 <div class="dashboard-container">
-  <div class="dashboard-header">
-    <div>
-      <h2>Operational Dashboard</h2>
-      <p class="subtitle">Real-time status overview of GCS customer ticket verifications & automated pre-checks</p>
+  <!-- Hero Section matching Reference Design -->
+  <div class="dashboard-hero">
+    <div class="hero-badge">
+      <span class="badge-icon">✦</span>
+      <span>ENTERPRISE REGULATORY AUTOMATION</span>
     </div>
+    <h1 class="hero-title">
+      Transforming Ticket Verification into <span class="serif-accent">Measurable Compliance</span>
+    </h1>
+    <p class="hero-subtitle">
+      Empowering regulatory specialists through automated OCR extraction and production-grade Studio verification standards.
+    </p>
+
     <div class="header-actions">
       <a routerLink="/upload" class="btn btn-primary">
         <span>+</span> Ingest New Ticket
@@ -18,37 +26,53 @@
     <strong>Notice:</strong> {{ errorMessage() }}
   </div>
 
-  <!-- Metric KPI Cards -->
+  <!-- Metric KPI Cards with Featured Dark Card (Matching Reference Layout) -->
   <div class="metrics-grid">
+    <!-- Card 1 -->
     <div class="metric-card">
-      <div class="metric-icon icon-blue">📋</div>
+      <div class="card-top">
+        <div class="metric-icon-box">📋</div>
+      </div>
       <div class="metric-content">
-        <span class="metric-label">Total Ingested Tickets</span>
         <span class="metric-value">{{ metrics().totalTickets }}</span>
+        <span class="metric-label">TOTAL INGESTED TICKETS</span>
+        <p class="metric-desc">Customer tickets ingested and classified under regulatory SOPs.</p>
       </div>
     </div>
 
+    <!-- Card 2 -->
     <div class="metric-card">
-      <div class="metric-icon icon-green">✅</div>
+      <div class="card-top">
+        <div class="metric-icon-box">📈</div>
+      </div>
       <div class="metric-content">
-        <span class="metric-label">Verified & Locked</span>
         <span class="metric-value">{{ metrics().verifiedTickets }}</span>
+        <span class="metric-label">VERIFIED &amp; LOCKED</span>
+        <p class="metric-desc">Parameters reviewed with mandatory audit justification.</p>
       </div>
     </div>
 
-    <div class="metric-card">
-      <div class="metric-icon icon-amber">⏳</div>
+    <!-- Card 3: Featured Dark Mahogany Card (Matching Reference 3rd Card) -->
+    <div class="metric-card featured-dark">
+      <div class="card-top">
+        <div class="metric-icon-box dark-glass">🛡️</div>
+      </div>
       <div class="metric-content">
-        <span class="metric-label">Pending PM Approval</span>
         <span class="metric-value">{{ metrics().pendingPmApprovals }}</span>
+        <span class="metric-label">PENDING PM APPROVAL</span>
+        <p class="metric-desc">Managed Services &amp; Unknown classification compliance queue.</p>
       </div>
     </div>
 
+    <!-- Card 4 -->
     <div class="metric-card">
-      <div class="metric-icon icon-purple">🤖</div>
+      <div class="card-top">
+        <div class="metric-icon-box">⚡</div>
+      </div>
       <div class="metric-content">
-        <span class="metric-label">Automated Runs Completed</span>
         <span class="metric-value">{{ metrics().totalRuns }}</span>
+        <span class="metric-label">AUTOMATED RUNS COMPLETED</span>
+        <p class="metric-desc">Playwright read-only inspections completed with PDF reports.</p>
       </div>
     </div>
   </div>
@@ -56,68 +80,69 @@
   <!-- Recent Tickets Table -->
   <div class="table-section">
     <div class="section-header">
-      <h3>Customer Tickets & Verification Status</h3>
+      <div>
+        <h3>Customer Tickets &amp; Verification Status</h3>
+        <p class="section-sub">Active registry of ingested tickets awaiting or undergoing pre-check.</p>
+      </div>
       <a routerLink="/history" class="view-all-link">View Full History &rarr;</a>
     </div>
 
     <div *ngIf="isLoading()" class="loading-state">
       <div class="spinner"></div>
-      <p>Loading enterprise ticket registry...</p>
+      <p>Loading ticket telemetry from registry...</p>
     </div>
 
     <div *ngIf="!isLoading() && recentTickets().length === 0" class="empty-state">
       <div class="empty-icon">📂</div>
       <h4>No Tickets Ingested Yet</h4>
-      <p>Get started by uploading a customer ticket with screenshots to initiate OCR requirement extraction.</p>
-      <a routerLink="/upload" class="btn btn-primary">Ingest First Ticket</a>
+      <p>Upload a customer ticket (PDF or image) to initiate automated OCR extraction.</p>
+      <a routerLink="/upload" class="btn btn-primary">Upload First Ticket</a>
     </div>
 
     <div *ngIf="!isLoading() && recentTickets().length > 0" class="table-wrapper">
       <table class="data-table">
         <thead>
           <tr>
-            <th>Ticket #</th>
-            <th>Customer Name</th>
+            <th>Ticket Number</th>
+            <th>Customer</th>
             <th>Classification</th>
-            <th>PM Routing</th>
-            <th>Verification</th>
-            <th>Parameters</th>
-            <th>Created (UTC)</th>
+            <th>Overall Status</th>
+            <th>Field Verification</th>
+            <th>Target Environment</th>
+            <th>Date Ingested</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let t of recentTickets()">
-            <td class="font-mono font-bold">{{ t.ticketNumber }}</td>
+            <td class="font-bold font-mono">{{ t.ticketNumber }}</td>
             <td>{{ t.customerName }}</td>
             <td>
-              <span class="classification-pill">{{ t.customerClassification }}</span>
+              <span class="classification-pill">{{ t.classification }}</span>
             </td>
             <td>
-              <span class="status-badge" [ngClass]="getStatusClass(t.pmRoutingStatus)">
-                {{ t.pmRoutingStatus }}
-              </span>
-            </td>
-            <td>
-              <span class="status-badge" [ngClass]="getStatusClass(t.verificationStatus)">
-                {{ t.verificationStatus }}
+              <span class="status-badge" [ngClass]="getStatusBadgeClass(t.overallStatus)">
+                {{ t.overallStatus }}
               </span>
             </td>
             <td>
               <div class="param-progress">
-                <span>{{ t.verifiedRequirements }} / {{ t.totalRequirements }}</span>
                 <div class="progress-bar-bg">
-                  <div class="progress-bar-fill" [style.width.%]="t.totalRequirements > 0 ? (t.verifiedRequirements / t.totalRequirements) * 100 : 0"></div>
+                  <div class="progress-bar-fill" [style.width.%]="(t.verifiedItemCount / (t.totalItemCount || 1)) * 100"></div>
                 </div>
+                <span>{{ t.verifiedItemCount }}/{{ t.totalItemCount }}</span>
               </div>
+            </td>
+            <td>
+              <span class="env-tag">{{ t.targetEnvironment }}</span>
             </td>
             <td class="text-muted">{{ t.createdAtUtc | date:'short' }}</td>
             <td class="actions-cell">
               <a [routerLink]="['/review', t.id]" class="btn-sm btn-outline">
-                Review Fields
+                Review OCR
               </a>
-              <a *ngIf="t.verificationStatus === 'RequirementsVerified'" [routerLink]="['/console', t.id]" class="btn-sm btn-primary">
-                Launch Run
+              <a [routerLink]="['/console', t.id]" class="btn-sm btn-primary">
+                Launch Pre-Check
               </a>
             </td>
           </tr>
