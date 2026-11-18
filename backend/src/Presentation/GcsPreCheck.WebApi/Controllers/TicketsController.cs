@@ -43,7 +43,7 @@ public class TicketsController : ControllerBase
                 t.PmRoutingStatus.ToString(),
                 t.VerificationStatus.ToString(),
                 t.RequirementItems.Count,
-                t.RequirementItems.Count(r => r.FieldStatus == FieldVerificationStatus.Verified || r.FieldStatus == FieldVerificationStatus.Modified),
+                t.RequirementItems.Count(r => r.FieldVerificationStatus == FieldVerificationStatus.Verified || r.FieldVerificationStatus == FieldVerificationStatus.Modified),
                 t.Attachments.Count,
                 t.CreatedAtUtc
             ))

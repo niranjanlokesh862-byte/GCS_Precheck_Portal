@@ -69,6 +69,13 @@ export interface TicketSummaryDto {
   verifiedRequirements: number;
   attachmentCount: number;
   createdAtUtc: string;
+
+  // Template binding convenience aliases
+  classification?: CustomerClassification;
+  overallStatus?: string;
+  verifiedItemCount?: number;
+  totalItemCount?: number;
+  targetEnvironment?: string;
 }
 
 export interface DashboardMetricsDto {

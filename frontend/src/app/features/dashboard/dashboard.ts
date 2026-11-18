@@ -64,7 +64,8 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  public getStatusClass(status: string): string {
+  public getStatusClass(status?: string): string {
+    if (!status) return 'badge-default';
     switch (status) {
       case 'RequirementsVerified':
       case 'ApprovedByPm':
@@ -81,5 +82,9 @@ export class DashboardComponent implements OnInit {
       default:
         return 'badge-default';
     }
+  }
+
+  public getStatusBadgeClass(status?: string): string {
+    return this.getStatusClass(status);
   }
 }

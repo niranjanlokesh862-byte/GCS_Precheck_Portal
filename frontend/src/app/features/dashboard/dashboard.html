@@ -106,9 +106,9 @@
             <th>Ticket Number</th>
             <th>Customer</th>
             <th>Classification</th>
-            <th>Overall Status</th>
+            <th>Verification Status</th>
             <th>Field Verification</th>
-            <th>Target Environment</th>
+            <th>PM Routing</th>
             <th>Date Ingested</th>
             <th>Actions</th>
           </tr>
@@ -118,23 +118,23 @@
             <td class="font-bold font-mono">{{ t.ticketNumber }}</td>
             <td>{{ t.customerName }}</td>
             <td>
-              <span class="classification-pill">{{ t.classification }}</span>
+              <span class="classification-pill">{{ t.customerClassification || t.classification }}</span>
             </td>
             <td>
-              <span class="status-badge" [ngClass]="getStatusBadgeClass(t.overallStatus)">
-                {{ t.overallStatus }}
+              <span class="status-badge" [ngClass]="getStatusClass(t.verificationStatus || t.overallStatus || '')">
+                {{ t.verificationStatus || t.overallStatus }}
               </span>
             </td>
             <td>
               <div class="param-progress">
                 <div class="progress-bar-bg">
-                  <div class="progress-bar-fill" [style.width.%]="(t.verifiedItemCount / (t.totalItemCount || 1)) * 100"></div>
+                  <div class="progress-bar-fill" [style.width.%]="(((t.verifiedRequirements ?? t.verifiedItemCount) || 0) / (((t.totalRequirements ?? t.totalItemCount) || 1))) * 100"></div>
                 </div>
-                <span>{{ t.verifiedItemCount }}/{{ t.totalItemCount }}</span>
+                <span>{{ t.verifiedRequirements ?? t.verifiedItemCount ?? 0 }}/{{ t.totalRequirements ?? t.totalItemCount ?? 0 }}</span>
               </div>
             </td>
             <td>
-              <span class="env-tag">{{ t.targetEnvironment }}</span>
+              <span class="env-tag">{{ t.pmRoutingStatus || t.targetEnvironment || 'NotRequired' }}</span>
             </td>
             <td class="text-muted">{{ t.createdAtUtc | date:'short' }}</td>
             <td class="actions-cell">
