@@ -1,0 +1,133 @@
+<div class="upload-container">
+  <div class="upload-header">
+    <a routerLink="/dashboard" class="back-link">&larr; Back to Dashboard</a>
+    <h2>Ingest Customer Ticket</h2>
+    <p class="subtitle">Upload ticket requirements, screenshots, and evidence for OCR parameter extraction</p>
+  </div>
+
+  <div *ngIf="errorMessage()" class="alert-banner alert-error">
+    <strong>Error:</strong> {{ errorMessage() }}
+  </div>
+
+  <div class="upload-card">
+    <form (ngSubmit)="submitTicket()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="ticketNumber">Ticket Number <span class="required">*</span></label>
+          <input 
+            id="ticketNumber"
+            type="text" 
+            class="form-control font-mono" 
+            placeholder="e.g. GCS-TKT-2026-0814"
+            [ngModel]="ticketNumber()"
+            (ngModelChange)="ticketNumber.set($event)"
+            name="ticketNumber"
+            [disabled]="isUploading()"
+            required>
+          <span class="help-text">Internal ticketing system reference identifier</span>
+        </div>
+
+        <div class="form-group">
+          <label for="customerName">Customer / Account Name <span class="required">*</span></label>
+          <input 
+            id="customerName"
+            type="text" 
+            class="form-control" 
+            placeholder="e.g. BioChem Global Corp"
+            [ngModel]="customerName()"
+            (ngModelChange)="customerName.set($event)"
+            name="customerName"
+            [disabled]="isUploading()"
+            required>
+          <span class="help-text">Organization or customer entity name</span>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="classification">Customer Classification Gate <span class="required">*</span></label>
+          <select 
+            id="classification"
+            class="form-control"
+            [ngModel]="classification()"
+            (ngModelChange)="classification.set($event)"
+            name="classification"
+            [disabled]="isUploading()">
+            <option value="eLite">eLite (Standard automated workflow - no PM approval required)</option>
+            <option value="ManagedServices">Managed Services (Requires Project Manager governance approval)</option>
+            <option value="Unknown">Unknown Account (Requires Project Manager classification review)</option>
+            <option value="OutOfScope">Out of Scope (Automatic rejection)</option>
+          </select>
+          <span class="help-text">Determines whether pre-check can execute directly or requires PM governance approval</span>
+        </div>
+      </div>
+
+      <!-- File Dropzone -->
+      <div class="dropzone-section">
+        <label class="dropzone-label">Ticket Attachments (Screenshots & PDFs) <span class="required">*</span></label>
+        
+        <div 
+          class="dropzone-area" 
+          (dragover)="onDragOver($event)" 
+          (drop)="onFileDrop($event)"
+          [class.disabled]="isUploading()">
+          <input 
+            #fileInput 
+            type="file" 
+            multiple 
+            accept=".png,.jpg,.jpeg,.pdf" 
+            (change)="onFileSelect($event)" 
+            style="display: none;">
+          
+          <div class="dropzone-content" (click)="fileInput.click()">
+            <div class="upload-icon">📁</div>
+            <p class="dropzone-text"><strong>Click to browse</strong> or drag & drop screenshots / PDFs here</p>
+            <span class="dropzone-hint">Supports PNG, JPG, JPEG, and PDF (Max 15 MB per file)</span>
+          </div>
+        </div>
+
+        <!-- Selected Files List -->
+        <div *ngIf="selectedFiles().length > 0" class="file-list">
+          <h4>Selected Files ({{ selectedFiles().length }})</h4>
+          <div class="file-grid">
+            <div *ngFor="let f of selectedFiles(); let idx = index" class="file-item">
+              <div *ngIf="f.previewUrl" class="thumb-container">
+                <img [src]="f.previewUrl" [alt]="f.name" class="file-thumb">
+              </div>
+              <div *ngIf="!f.previewUrl" class="thumb-container pdf-thumb">
+                <span>PDF</span>
+              </div>
+              <div class="file-meta">
+                <span class="file-name" [title]="f.name">{{ f.name }}</span>
+                <span class="file-size">{{ f.sizeFormatted }}</span>
+              </div>
+              <button 
+                type="button" 
+                class="btn-remove" 
+                (click)="removeFile(idx)" 
+                [disabled]="isUploading()"
+                title="Remove file">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Progress Overlay / Message -->
+      <div *ngIf="isUploading()" class="upload-progress-container">
+        <div class="spinner"></div>
+        <div class="progress-details">
+          <strong>Ingesting Ticket & Extracting Requirements...</strong>
+          <p>{{ uploadProgressStep() }}</p>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/dashboard" class="btn btn-secondary" [class.disabled]="isUploading()">Cancel</a>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="isUploading() || selectedFiles().length === 0 || !ticketNumber().trim() || !customerName().trim()">
+          Ingest & Process OCR
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

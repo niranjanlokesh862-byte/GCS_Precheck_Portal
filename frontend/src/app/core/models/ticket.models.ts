@@ -57,3 +57,25 @@ export interface PmQueueItemDto {
   ocrOverallConfidence: number | null;
   uploadedAtUtc: string;
 }
+
+export interface TicketSummaryDto {
+  id: string;
+  ticketNumber: string;
+  customerName: string;
+  customerClassification: CustomerClassification;
+  pmRoutingStatus: PmRoutingStatus;
+  verificationStatus: VerificationStatus;
+  totalRequirements: number;
+  verifiedRequirements: number;
+  attachmentCount: number;
+  createdAtUtc: string;
+}
+
+export interface DashboardMetricsDto {
+  totalTickets: number;
+  verifiedTickets: number;
+  pendingPmApprovals: number;
+  totalRuns: number;
+  passedRuns: number;
+  failedRuns: number;
+}

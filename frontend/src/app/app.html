@@ -1,26 +1,63 @@
-<div class="app-layout">
-  <header class="app-header">
+<div class="app-layout" [class.is-login-layout]="isLoginPage()">
+  <!-- Main Header: Displayed when authenticated and not on login page -->
+  <header *ngIf="!isLoginPage()" class="app-header">
     <div class="branding">
-      <span class="logo">⚡</span>
-      <h1>GCS Pre-Check Automation Portal</h1>
-      <span class="version-tag">v2.4 Enterprise</span>
+      <a routerLink="/dashboard" class="brand-link">
+        <span class="logo">⚡</span>
+        <div>
+          <h1>WERCS GCS Pre-Check</h1>
+          <span class="sub-brand">Enterprise Automation Portal</span>
+        </div>
+      </a>
+      <span class="version-tag">v2.4</span>
     </div>
 
     <nav class="nav-links">
-      <a routerLink="/pm-queue" routerLinkActive="active">PM Routing Queue</a>
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a routerLink="/upload" routerLinkActive="active">
+        <span class="nav-icon">📤</span> Ingest Ticket
+      </a>
+      <a routerLink="/history" routerLinkActive="active">
+        <span class="nav-icon">📁</span> Registry & History
+      </a>
+      <a routerLink="/pm-queue" routerLinkActive="active">
+        <span class="nav-icon">🛡️</span> PM Queue
+      </a>
     </nav>
 
     <div class="user-session">
-      <span class="user-label">Logged In:</span>
-      <select class="user-dropdown" [ngModel]="authService.currentUserId()" (ngModelChange)="onUserChange($event)">
-        <option *ngFor="let u of authService.users()" [value]="u.id">
-          {{ u.fullName }} ({{ u.role }})
-        </option>
-      </select>
+      <div class="user-meta">
+        <span class="user-label">Active Specialist:</span>
+        <select class="user-dropdown" [ngModel]="authService.currentUserId()" (ngModelChange)="onUserChange($event)">
+          <option *ngFor="let u of authService.users()" [value]="u.id">
+            {{ u.fullName }} ({{ u.role }})
+          </option>
+        </select>
+      </div>
+      <div class="role-badge" [attr.data-role]="authService.currentUserRole()">
+        {{ authService.currentUserRole() }}
+      </div>
+      <button class="btn-logout" (click)="onLogout()" title="Sign Out of Session">
+        <span class="logout-icon">🚪</span>
+        <span>Sign Out</span>
+      </button>
     </div>
   </header>
 
-  <main class="app-content">
+  <main class="app-content" [class.fullscreen]="isLoginPage()">
     <router-outlet></router-outlet>
   </main>
+
+  <footer *ngIf="!isLoginPage()" class="app-footer">
+    <div class="footer-left">
+      <span>WERCS GCS Enterprise Operations &copy; 2026</span>
+      <span class="security-tag">Zero-Trust Credential Isolation &bull; Read-Only Safety Route Guard</span>
+    </div>
+    <div class="footer-right">
+      <span class="status-indicator-dot"></span>
+      <span>Studio Network Proxy: Active (Port 8888)</span>
+    </div>
+  </footer>
 </div>

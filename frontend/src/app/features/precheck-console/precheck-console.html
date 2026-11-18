@@ -161,6 +161,9 @@
               <button class="btn-action-primary" [routerLink]="['/review', ticketId()]">
                 View Full Parameter Comparison
               </button>
+              <button class="btn-action-download" (click)="downloadReport(completed()!.runId)">
+                📄 Download PDF Audit Report
+              </button>
               <button class="btn-action-secondary" (click)="resetConsole()">
                 Run Another Pre-Check
               </button>

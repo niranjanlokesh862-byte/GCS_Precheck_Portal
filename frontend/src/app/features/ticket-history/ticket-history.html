@@ -1,0 +1,102 @@
+<div class="history-container">
+  <div class="history-header">
+    <div>
+      <h2>Customer Ticket Registry & History</h2>
+      <p class="subtitle">Search, track, and audit customer tickets and verification statuses</p>
+    </div>
+    <div>
+      <a routerLink="/upload" class="btn btn-primary">+ Ingest New Ticket</a>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage()" class="alert-banner alert-warning">
+    {{ errorMessage() }}
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="filter-bar">
+    <div class="search-input-wrapper">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Filter by ticket number or customer name..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)">
+    </div>
+
+    <div class="filter-group">
+      <label>Classification:</label>
+      <select 
+        class="filter-select"
+        [ngModel]="selectedClassification()"
+        (ngModelChange)="selectedClassification.set($event)">
+        <option value="ALL">All Classifications</option>
+        <option value="eLite">eLite</option>
+        <option value="ManagedServices">Managed Services</option>
+        <option value="Unknown">Unknown</option>
+        <option value="OutOfScope">Out of Scope</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tickets Table -->
+  <div class="table-card">
+    <div *ngIf="isLoading()" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading ticket records...</p>
+    </div>
+
+    <div *ngIf="!isLoading() && filteredTickets().length === 0" class="empty-state">
+      <p>No matching tickets found.</p>
+    </div>
+
+    <div *ngIf="!isLoading() && filteredTickets().length > 0" class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Ticket Number</th>
+            <th>Customer</th>
+            <th>Classification</th>
+            <th>PM Routing</th>
+            <th>Verification State</th>
+            <th>Parameters</th>
+            <th>Attachments</th>
+            <th>Created (UTC)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of filteredTickets()">
+            <td class="font-mono font-bold">{{ t.ticketNumber }}</td>
+            <td>{{ t.customerName }}</td>
+            <td>
+              <span class="classification-pill">{{ t.customerClassification }}</span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(t.pmRoutingStatus)">
+                {{ t.pmRoutingStatus }}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(t.verificationStatus)">
+                {{ t.verificationStatus }}
+              </span>
+            </td>
+            <td>
+              <span class="count-badge">{{ t.verifiedRequirements }} / {{ t.totalRequirements }}</span>
+            </td>
+            <td>
+              <span class="count-badge">{{ t.attachmentCount }} file(s)</span>
+            </td>
+            <td class="text-muted">{{ t.createdAtUtc | date:'short' }}</td>
+            <td class="actions-cell">
+              <a [routerLink]="['/review', t.id]" class="btn-sm btn-outline">Review</a>
+              <a *ngIf="t.verificationStatus === 'RequirementsVerified'" [routerLink]="['/console', t.id]" class="btn-sm btn-primary">Pre-Check</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

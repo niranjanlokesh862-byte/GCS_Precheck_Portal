@@ -5,52 +5,82 @@
 }
 
 .app-header {
-  height: 60px;
+  height: 64px;
   background-color: #0f172a;
   color: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 24px;
-  border-bottom: 2px solid #2563eb;
+  padding: 0 2rem;
+  border-bottom: 2px solid #0284c7;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 
   .branding {
     display: flex;
     align-items: center;
     gap: 12px;
 
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+
     .logo {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
+      color: #38bdf8;
     }
 
     h1 {
       margin: 0;
-      font-size: 1.15rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .sub-brand {
+      display: block;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 500;
     }
 
     .version-tag {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       background: #1e293b;
       padding: 2px 8px;
       border-radius: 4px;
-      color: #94a3b8;
+      color: #38bdf8;
+      border: 1px solid #334155;
     }
   }
 
   .nav-links {
     display: flex;
-    gap: 16px;
+    align-items: center;
+    gap: 0.5rem;
 
     a {
       color: #94a3b8;
       text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 6px 12px;
-      border-radius: 4px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.5rem 0.85rem;
+      border-radius: 6px;
       transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+
+      .nav-icon {
+        font-size: 0.95rem;
+      }
 
       &:hover {
         color: #ffffff;
@@ -59,7 +89,7 @@
 
       &.active {
         color: #ffffff;
-        background: #2563eb;
+        background: #0284c7;
       }
     }
   }
@@ -67,31 +97,139 @@
   .user-session {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 
-    .user-label {
-      font-size: 0.8rem;
-      color: #94a3b8;
+    .user-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .user-label {
+        font-size: 0.78rem;
+        color: #94a3b8;
+      }
+
+      .user-dropdown {
+        background: #1e293b;
+        color: #f1f5f9;
+        border: 1px solid #334155;
+        border-radius: 6px;
+        padding: 5px 10px;
+        font-size: 0.85rem;
+        cursor: pointer;
+
+        &:focus {
+          outline: none;
+          border-color: #38bdf8;
+        }
+      }
     }
 
-    .user-dropdown {
-      background: #1e293b;
-      color: #f1f5f9;
-      border: 1px solid #334155;
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 0.85rem;
-      cursor: pointer;
+    .role-badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #334155;
+      color: #e2e8f0;
 
-      &:focus {
-        outline: none;
-        border-color: #3b82f6;
+      &[data-role="Admin"] {
+        background: #4338ca;
+        color: #e0e7ff;
+      }
+      &[data-role="LeadSpecialist"] {
+        background: #0369a1;
+        color: #e0f2fe;
+      }
+      &[data-role="Operator"] {
+        background: #15803d;
+        color: #dcfce7;
+      }
+      &[data-role="ProjectManager"] {
+        background: #b45309;
+        color: #fef3c7;
+      }
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      .logout-icon {
+        font-size: 0.85rem;
+      }
+
+      &:hover {
+        background: rgba(239, 68, 68, 0.25);
+        color: #fee2e2;
+        border-color: #ef4444;
       }
     }
   }
 }
 
+.app-layout.is-login-layout {
+  min-height: 100vh;
+}
+
 .app-content {
   flex: 1;
   background: #f8fafc;
+  padding: 2rem;
+  box-sizing: border-box;
+
+  &.fullscreen {
+    padding: 0;
+    background: transparent;
+  }
+}
+
+.app-footer {
+  background: #0f172a;
+  color: #94a3b8;
+  padding: 0.85rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  border-top: 1px solid #1e293b;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .security-tag {
+      color: #64748b;
+    }
+  }
+
+  .footer-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .status-indicator-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      display: inline-block;
+      box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+    }
+  }
 }

@@ -397,6 +397,21 @@
         }
       }
 
+      .btn-action-download {
+        padding: 0.6rem 1.25rem;
+        border-radius: 6px;
+        border: 1px solid #0284c7;
+        background-color: #0284c7;
+        color: #ffffff;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #0369a1;
+        }
+      }
+
       .btn-action-secondary {
         padding: 0.6rem 1.25rem;
         border-radius: 6px;

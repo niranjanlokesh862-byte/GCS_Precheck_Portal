@@ -1,7 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TicketDetailDto, TicketRequirementItemDto, PmQueueItemDto, CustomerClassification } from '../models/ticket.models';
+import { 
+  TicketDetailDto, 
+  TicketRequirementItemDto, 
+  PmQueueItemDto, 
+  CustomerClassification,
+  TicketSummaryDto,
+  DashboardMetricsDto 
+} from '../models/ticket.models';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +16,14 @@ import { TicketDetailDto, TicketRequirementItemDto, PmQueueItemDto, CustomerClas
 export class TicketService {
   private http = inject(HttpClient);
   private apiBaseUrl = '/api';
+
+  getAllTickets(): Observable<TicketSummaryDto[]> {
+    return this.http.get<TicketSummaryDto[]>(`${this.apiBaseUrl}/tickets`);
+  }
+
+  getDashboardMetrics(): Observable<DashboardMetricsDto> {
+    return this.http.get<DashboardMetricsDto>(`${this.apiBaseUrl}/tickets/dashboard-metrics`);
+  }
 
   uploadTicket(
     ticketNumber: string,

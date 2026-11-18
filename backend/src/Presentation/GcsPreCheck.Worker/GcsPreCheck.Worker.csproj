@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+  <PropertyGroup>
+    <RootNamespace>GcsPreCheck.Worker</RootNamespace>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\GcsPreCheck.Domain\GcsPreCheck.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\GcsPreCheck.Application\GcsPreCheck.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\GcsPreCheck.Infrastructure\GcsPreCheck.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\GcsPreCheck.Persistence\GcsPreCheck.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.49.0" />
+  </ItemGroup>
+</Project>

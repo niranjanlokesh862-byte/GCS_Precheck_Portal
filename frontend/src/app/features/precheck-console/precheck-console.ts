@@ -141,6 +141,10 @@ export class PreCheckConsoleComponent implements OnInit, OnDestroy {
     }
   }
 
+  public downloadReport(runId: string): void {
+    window.open(`/api/precheck/runs/${runId}/report`, '_blank');
+  }
+
   public resetConsole(): void {
     this.jobId.set(null);
     this.signalRService.disconnect();
